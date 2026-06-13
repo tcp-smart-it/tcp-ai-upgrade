@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCP AI UPGRADE — แบบสำรวจงานประจำวัน</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&family=Syne:wght@800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#C41E1E; --red-lt:#FDEAEA; --red-md:#F5C0C0;
+  --ink:#141414; --ink2:#3A3A3A; --ink3:#666;
+  --bg:#FAFAF8; --bgcard:#fff; --brd:#E4EDE6; --brd2:#CDE5D2;
+  --blue:#1A5CB0; --blue-lt:#EBF2FC;
+  --accent:#059669; --accent2:#0D9488;
+  --accent-lt:#E8F5EC; --accent-md:#B0D8BC;
+  --green:#1A7A30; --green-lt:#E8F5EC;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans Thai',sans-serif;
+  background:var(--bg); color:var(--ink);
+  min-height:100vh;
+}
+
+/* HEADER */
+.site-header{
+  background:var(--ink);
+  padding:18px 32px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.site-header .logo{
+  font-family:'Syne',sans-serif; font-weight:900;
+  font-size:18px; color:#fff; letter-spacing:-0.5px;
+}
+.site-header .logo span{
+  background:linear-gradient(135deg,#34D399,#22D3EE);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.anon-badge{
+  display:flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+  padding:6px 14px; border-radius:20px;
+  font-size:12px; color:rgba(255,255,255,.8);
+  font-family:'DM Mono',monospace; letter-spacing:.5px;
+}
+
+/* HERO */
+.hero{
+  background:linear-gradient(150deg,#F0FAF3 0%,#FAFAF8 60%,#F4FBF6 100%);
+  padding:48px 32px 40px;
+  text-align:center;
+  border-bottom:1px solid var(--accent-md);
+}
+.hero .pre-label{
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:3px; color:#aaa;
+  margin-bottom:14px;
+}
+.hero h1{
+  font-family:'Syne',sans-serif; font-weight:900;
+  font-size:clamp(26px,5vw,40px); color:var(--ink);
+  line-height:1.15; margin-bottom:12px; letter-spacing:-.5px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  font-size:14px; color:var(--ink3);
+  max-width:520px; margin:0 auto 20px; line-height:1.7;
+}
+.hero-tags{
+  display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+}
+.htag{
+  font-size:11px; font-family:'DM Mono',monospace;
+  padding:4px 12px; border-radius:20px;
+  background:var(--accent-lt); color:var(--green);
+  border:1px solid var(--accent-md);
+}
+
+/* PROGRESS BAR */
+.progress-wrap{
+  background:var(--bgcard); border-bottom:1px solid var(--brd);
+  padding:14px 32px; position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; gap:14px;
+}
+.progress-label{
+  font-family:'DM Mono',monospace; font-size:11px;
+  color:var(--ink3); white-space:nowrap; min-width:80px;
+}
+.progress-track{
+  flex:1; height:6px; background:var(--brd);
+  border-radius:3px; overflow:hidden;
+}
+.progress-fill{
+  height:100%; border-radius:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .4s ease;
+}
+.progress-pct{
+  font-family:'DM Mono',monospace; font-size:11px;
+  color:var(--ink3); min-width:32px; text-align:right;
+}
+
+/* FORM CONTAINER */
+.form-container{
+  max-width:680px; margin:0 auto;
+  padding:40px 24px 80px;
+}
+
+/* QUESTION CARD */
+.q-card{
+  background:var(--bgcard);
+  border:1.5px solid var(--brd);
+  border-radius:16px;
+  padding:24px 28px;
+  margin-bottom:16px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+  transition:border-color .2s, box-shadow .2s;
+}
+.q-card:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(5,150,105,.08), 0 2px 10px rgba(0,0,0,.05);
+}
+.q-card.required-empty{
+  border-color:var(--red);
+}
+.q-num{
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:2px; color:var(--accent);
+  margin-bottom:6px;
+}
+.q-label{
+  font-size:15px; font-weight:700; color:var(--ink);
+  margin-bottom:4px; line-height:1.5;
+}
+.q-label .req{ color:var(--red); margin-left:3px; }
+.q-hint{
+  font-size:12px; color:var(--ink3);
+  margin-bottom:14px; line-height:1.55;
+}
+
+/* SELECT */
+select{
+  width:100%; padding:12px 16px;
+  border:1.5px solid var(--brd2); border-radius:10px;
+  font-family:'Noto Sans Thai',sans-serif; font-size:14px;
+  color:var(--ink); background:var(--bg);
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 14px center;
+  cursor:pointer; transition:border-color .2s;
+}
+select:focus{ outline:none; border-color:var(--accent); }
+
+/* TEXTAREA */
+textarea{
+  width:100%; padding:12px 16px;
+  border:1.5px solid var(--brd2); border-radius:10px;
+  font-family:'Noto Sans Thai',sans-serif; font-size:14px;
+  color:var(--ink); background:var(--bg);
+  resize:vertical; min-height:90px; line-height:1.6;
+  transition:border-color .2s;
+}
+textarea:focus{ outline:none; border-color:var(--accent); }
+textarea::placeholder{ color:#bbb; }
+.char-count{
+  text-align:right; font-size:11px; color:var(--ink3);
+  font-family:'DM Mono',monospace; margin-top:5px;
+}
+
+/* EXAMPLE CHIPS */
+.examples{
+  display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;
+}
+.ex-chip{
+  font-size:11px; padding:5px 12px; border-radius:20px;
+  background:var(--bg); border:1px solid var(--brd2);
+  color:var(--ink3); cursor:pointer; transition:all .15s;
+  font-family:'Noto Sans Thai',sans-serif;
+  user-select:none;
+}
+.ex-chip:hover{
+  background:var(--accent-lt); border-color:var(--accent);
+  color:var(--accent);
+}
+
+/* SUBMIT AREA */
+.submit-area{
+  background:var(--bgcard); border:1.5px solid var(--brd);
+  border-radius:16px; padding:24px 28px;
+  display:flex; flex-direction:column; gap:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+.submit-note{
+  font-size:12px; color:var(--ink3); line-height:1.6;
+  display:flex; gap:8px; align-items:flex-start;
+}
+.btn-submit{
+  width:100%; padding:16px;
+  background:var(--ink); color:#fff;
+  border:none; border-radius:12px;
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:16px; letter-spacing:.5px;
+  cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-submit:hover{ background:#000; transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.2); }
+.btn-submit:active{ transform:translateY(0); }
+.btn-submit:disabled{ background:#ccc; cursor:default; transform:none; box-shadow:none; }
+.btn-submit .spinner{
+  width:18px; height:18px; border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff; border-radius:50%;
+  animation:spin .8s linear infinite; display:none;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* SUCCESS STATE */
+.success-screen{
+  display:none; text-align:center;
+  padding:60px 24px;
+  max-width:520px; margin:0 auto;
+}
+.success-icon{
+  width:80px; height:80px; border-radius:50%;
+  background:var(--green-lt); border:3px solid var(--green);
+  display:flex; align-items:center; justify-content:center;
+  font-size:36px; margin:0 auto 24px;
+}
+.success-title{
+  font-family:'Syne',sans-serif; font-weight:900;
+  font-size:28px; color:var(--ink); margin-bottom:10px;
+}
+.success-sub{
+  font-size:14px; color:var(--ink3); line-height:1.7;
+  margin-bottom:28px;
+}
+.btn-secondary{
+  padding:12px 28px; border-radius:10px;
+  background:var(--bg); border:1.5px solid var(--brd2);
+  font-family:'Noto Sans Thai',sans-serif; font-size:14px;
+  font-weight:700; color:var(--ink); cursor:pointer; transition:all .2s;
+}
+.btn-secondary:hover{ border-color:var(--ink); }
+
+/* FOOTER */
+.site-footer{
+  text-align:center; padding:24px;
+  font-size:11px; color:var(--ink3);
+  font-family:'DM Mono',monospace; letter-spacing:.5px;
+  border-top:1px solid var(--brd);
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .site-header{ padding:14px 16px; }
+  .hero{ padding:36px 16px 28px; }
+  .progress-wrap{ padding:12px 16px; }
+  .form-container{ padding:24px 12px 60px; }
+  .q-card{ padding:18px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">TCP <span>AI</span> UPGRADE</div>
+  <div class="anon-badge">🔒 ไม่ระบุตัวตน · ANONYMOUS</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="pre-label">PRE-CAMPAIGN SURVEY · แบบสำรวจก่อนเริ่มกิจกรรม</div>
+  <h1>บอกเราว่างานไหน<br><span>ใช้เวลาของคุณมากที่สุด</span></h1>
+  <p>ทีม IT จะนำข้อมูลนี้ไปออกแบบกิจกรรม AI ที่ตอบโจทย์งานจริงของแต่ละแผนก ใช้เวลาเพียง 5–10 นาที</p>
+  <div class="hero-tags">
+    <div class="htag">⏱️ 5–10 นาที</div>
+    <div class="htag">🔒 ไม่ระบุชื่อ</div>
+    <div class="htag">📋 4 คำถาม</div>
+    <div class="htag">🏢 7 แผนก</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-label">ความคืบหน้า</div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-pct" id="progressPct">0%</div>
+</div>
+
+<!-- CONFIDENTIALITY BANNER -->
+<div class="form-container" id="formSection">
+  <div style="
+    background:linear-gradient(135deg,#E8F5EC,#F0FAF3);
+    border:2px solid #B0D8BC; border-radius:16px;
+    padding:20px 24px; margin-bottom:20px;
+    display:flex; gap:16px; align-items:flex-start;
+  ">
+    <div style="font-size:32px;line-height:1;flex-shrink:0">🔒</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:16px;color:#1A7A30;margin-bottom:6px">
+        คำตอบของคุณเป็นความลับ 100%
+      </div>
+      <div style="font-size:13px;color:#2A5A34;line-height:1.7">
+        ไม่มีการบันทึกชื่อ ไม่มีการบันทึกอีเมล และไม่มีใครในบริษัทรู้ว่าคุณตอบอะไร รวมถึงหัวหน้าของคุณด้วย<br>
+        <strong>ข้อมูลจะถูกนำไปใช้เป็นภาพรวมเท่านั้น</strong> เพื่อออกแบบกิจกรรมที่ตอบโจทย์งานจริงของทุกคน
+      </div>
+    </div>
+  </div>
+
+  <form id="surveyForm" novalidate>
+
+    <!-- Q0: Department -->
+    <div class="q-card" id="card0">
+      <div class="q-num">คำถามที่ 01 / 05</div>
+      <div class="q-label">คุณอยู่แผนกไหน<span class="req">*</span></div>
+      <div class="q-hint">บอกแค่แผนก — ไม่มีการระบุตัวตนใดๆ ทั้งสิ้น</div>
+      <select id="dept" required>
+        <option value="">— เลือกแผนก —</option>
+        <option value="ACD">ACD — แผนกบัญชีและบริหารงานสำนักงาน</option>
+        <option value="COM">COM — แผนกคอมเมอร์เชียล</option>
+        <option value="FIT">FIT — แผนกการเงินและเทคโนโลยีสารสนเทศ</option>
+        <option value="MKT">MKT — แผนกการตลาด</option>
+        <option value="PLD">PLD — แผนกทรัพยากรบุคคลและกฎหมาย</option>
+        <option value="RDA">RDA — แผนกวิจัยพัฒนาและกำกับดูแลผลิตภัณฑ์</option>
+        <option value="SCD">SCD — แผนกชัพพลายเชน</option>
+      </select>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card" id="card1">
+      <div class="q-num">คำถามที่ 02 / 05</div>
+      <div class="q-label">มีงานไหนในแต่ละสัปดาห์ที่รู้สึกว่ากินเวลาเกินไป และติดปัญหาเรื่องอะไรที่ทำให้ช้า<span class="req">*</span></div>
+      <div class="q-hint">💬 ไม่มีคำตอบที่ผิด ไม่มีใครรู้ว่าคุณตอบอะไร — เล่าตามจริงได้เลย<br>เช่น "สรุปรายงานยอดขายทุกอาทิตย์ ติดตรงที่ต้องเปิดหลายไฟล์แล้ว copy ทีละอัน กินเวลา 2–3 ชั่วโมง"</div>
+      <div class="examples">
+        <div class="ex-chip" onclick="appendExample('q1',this)">สรุปรายงานประจำสัปดาห์</div>
+        <div class="ex-chip" onclick="appendExample('q1',this)">กรอกข้อมูลใน Excel</div>
+        <div class="ex-chip" onclick="appendExample('q1',this)">เขียนอีเมลติดตามงาน</div>
+        <div class="ex-chip" onclick="appendExample('q1',this)">จัดทำเอกสารนำเสนอ</div>
+        <div class="ex-chip" onclick="appendExample('q1',this)">ตรวจสอบใบเสนอราคา</div>
+      </div>
+      <textarea id="q1" placeholder="งานคืออะไร และติดปัญหาเรื่องอะไร..." maxlength="500" oninput="updateProgress();countChars('q1','cc1')"></textarea>
+      <div class="char-count" id="cc1">0 / 500</div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" id="card2">
+      <div class="q-num">คำถามที่ 03 / 05</div>
+      <div class="q-label">เอกสารหรือรายงานไหนที่ทำแล้วรู้สึกว่า "ทำไมมันยากขนาดนี้" ทุกครั้ง และยากเพราะอะไร</div>
+      <div class="q-hint">💬 ข้ามได้ถ้าไม่มี — ไม่มีใครรู้ว่าคุณตอบหรือไม่ตอบ<br>เช่น "สรุปการประชุม ยากเพราะต้องพิมพ์ใหม่ทั้งหมดเอง ไม่มี template"</div>
+      <div class="examples">
+        <div class="ex-chip" onclick="appendExample('q2',this)">สรุปการประชุม (MOM)</div>
+        <div class="ex-chip" onclick="appendExample('q2',this)">Presentation ลูกค้า</div>
+        <div class="ex-chip" onclick="appendExample('q2',this)">รายงานสินค้าคงคลัง</div>
+        <div class="ex-chip" onclick="appendExample('q2',this)">เอกสารนำเข้า/ส่งออก</div>
+        <div class="ex-chip" onclick="appendExample('q2',this)">รายงาน KPI ประจำเดือน</div>
+      </div>
+      <textarea id="q2" placeholder="เอกสารคืออะไร และยากเพราะอะไร..." maxlength="500" oninput="updateProgress();countChars('q2','cc2')"></textarea>
+      <div class="char-count" id="cc2">0 / 500</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" id="card3">
+      <div class="q-num">คำถามที่ 04 / 05</div>
+      <div class="q-label">ถ้ามีรีโมทกด ⏩ Fast-Forward งานได้ คุณอยากกด Fast-Forward งานอะไร และงานนั้นติดขัดเรื่องอะไรอยู่</div>
+      <div class="q-hint">💬 ข้ามได้ถ้าไม่มี — ตอบตามความรู้สึกจริงๆ ไม่ต้องกลัวผิด<br>เช่น "แปลเอกสาร Spec สินค้าภาษาอังกฤษ ติดเพราะภาษาเทคนิคเฉพาะทาง แปลผิดไม่ได้"</div>
+      <div class="examples">
+        <div class="ex-chip" onclick="appendExample('q3',this)">แปลเอกสารต่างประเทศ</div>
+        <div class="ex-chip" onclick="appendExample('q3',this)">ค้นหาข้อมูลเปรียบเทียบ</div>
+        <div class="ex-chip" onclick="appendExample('q3',this)">นับสต็อกสินค้า</div>
+        <div class="ex-chip" onclick="appendExample('q3',this)">สรุปข้อมูลจากหลายไฟล์</div>
+        <div class="ex-chip" onclick="appendExample('q3',this)">ตรวจเอกสารหาข้อผิดพลาด</div>
+      </div>
+      <textarea id="q3" placeholder="งานคืออะไร และติดขัดเรื่องอะไร..." maxlength="500" oninput="updateProgress();countChars('q3','cc3')"></textarea>
+      <div class="char-count" id="cc3">0 / 500</div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" id="card4">
+      <div class="q-num">คำถามที่ 05 / 05</div>
+      <div class="q-label">ถ้าวันนึงตื่นมาแล้วงาน 1 อย่างเสร็จเองไปแล้ว — อยากให้เป็นงานอะไร แล้วที่ทำเองอยู่ ติดตรงไหนเหรอ<span class="req">*</span></div>
+      <div class="q-hint">💬 ไม่ต้องคิดว่าเป็นไปได้หรือเปล่า — บอกตามความต้องการที่แท้จริง ไม่มีใครรู้ว่าคุณตอบอะไร<br>เช่น "อยากได้ผู้ช่วยเขียนอีเมลภาษาอังกฤษ เพราะเขียนเองใช้เวลานาน กลัวผิดไวยากรณ์"</div>
+      <div class="examples">
+        <div class="ex-chip" onclick="appendExample('q4',this)">เขียนอีเมลให้</div>
+        <div class="ex-chip" onclick="appendExample('q4',this)">สรุปเอกสารยาวๆ</div>
+        <div class="ex-chip" onclick="appendExample('q4',this)">แปลภาษาให้</div>
+        <div class="ex-chip" onclick="appendExample('q4',this)">วิเคราะห์ตัวเลข</div>
+        <div class="ex-chip" onclick="appendExample('q4',this)">คิดไอเดียใหม่ๆ</div>
+      </div>
+      <textarea id="q4" placeholder="งานคืออะไร และอยากได้ผู้ช่วยเพราะอะไร..." maxlength="500" oninput="updateProgress();countChars('q4','cc4')"></textarea>
+      <div class="char-count" id="cc4">0 / 500</div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <div class="submit-note">
+        <span>🔒</span>
+        <span>คำตอบทั้งหมดเป็นความลับ ไม่มีการระบุตัวตน หัวหน้าของคุณไม่สามารถเข้าถึงคำตอบรายบุคคลได้ ข้อมูลจะถูกใช้เป็นภาพรวมเพื่อออกแบบกิจกรรม TCP AI UPGRADE เท่านั้น</span>
+      </div>
+      <div id="errMsg" style="color:var(--red);font-size:13px;display:none;padding:8px 12px;background:var(--red-lt);border-radius:8px;border:1px solid var(--red-md)"></div>
+      <button type="submit" class="btn-submit" id="btnSubmit">
+        <div class="spinner" id="spinner"></div>
+        <span id="btnText">ส่งคำตอบ →</span>
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">✓</div>
+  <div class="success-title">ขอบคุณมากครับ! 🎉</div>
+  <div class="success-sub">
+    คำตอบของคุณถูกบันทึกเรียบร้อยแล้ว<br>
+    <strong>และเป็นความลับ — ไม่มีใครรู้ว่าคุณตอบอะไร</strong><br><br>
+    ทีม IT จะนำ Insight จากทุกแผนกมาออกแบบกิจกรรม<br>
+    ที่แก้ปัญหางานจริงๆ ของคุณ ไม่ใช่กิจกรรมที่เดาเอา<br><br>
+    <strong>คาดว่ากิจกรรมจะเริ่มต้น สิงหาคม 2569 นี้ 🚀</strong>
+  </div>
+  <button class="btn-secondary" onclick="resetForm()">ส่งคำตอบอีกครั้ง</button>
+</div>
+
+<footer class="site-footer">
+  TCP AI UPGRADE Campaign · ทีม IT · TCP Pharmachem Co., Ltd.
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// CONFIG — ใส่ URL จาก Google Apps Script ที่นี่
+// ══════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyM4YqnbtWNhHRWZA3V8xnsDqfDSw1gLzID1BCa_zd8LCphYQ9LyZpeO_0o8Bn4wCdnHg/exec';
+
+// ══════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════
+function updateProgress(){
+  const dept = document.getElementById('dept').value;
+  const q1   = document.getElementById('q1').value.trim();
+  const q2   = document.getElementById('q2').value.trim();
+  const q3   = document.getElementById('q3').value.trim();
+  const q4   = document.getElementById('q4').value.trim();
+
+  const required = [dept, q1, q4];
+  const optional = [q2, q3];
+  const filledReq = required.filter(v => v !== '').length;
+  const filledOpt = optional.filter(v => v !== '').length;
+  const total = (filledReq / required.length) * 80 + (filledOpt / optional.length) * 20;
+  const pct = Math.round(Math.min(total, 100));
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function countChars(fieldId, countId){
+  const val = document.getElementById(fieldId).value;
+  document.getElementById(countId).textContent = val.length + ' / 500';
+}
+
+// ══════════════════════════════════════
+// EXAMPLE CHIPS
+// ══════════════════════════════════════
+function appendExample(fieldId, chip){
+  const ta = document.getElementById(fieldId);
+  const txt = chip.textContent;
+  ta.value = ta.value ? ta.value + ', ' + txt : txt;
+  ta.focus();
+  updateProgress();
+  const id = 'cc' + fieldId.slice(-1);
+  document.getElementById(id).textContent = ta.value.length + ' / 500';
+}
+
+// ══════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════
+document.getElementById('surveyForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const dept = document.getElementById('dept').value;
+  const q1   = document.getElementById('q1').value.trim();
+  const q4   = document.getElementById('q4').value.trim();
+  const errEl = document.getElementById('errMsg');
+
+  // Validate required
+  if(!dept){
+    errEl.textContent = '⚠️ กรุณาเลือกแผนกก่อนส่ง';
+    errEl.style.display = 'block';
+    document.getElementById('card0').classList.add('required-empty');
+    document.getElementById('card0').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(!q1){
+    errEl.textContent = '⚠️ กรุณาตอบคำถามที่ 2 (งานที่ใช้เวลานาน)';
+    errEl.style.display = 'block';
+    document.getElementById('card1').classList.add('required-empty');
+    document.getElementById('card1').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(!q4){
+    errEl.textContent = '⚠️ กรุณาตอบคำถามที่ 5 (อยากให้ AI ช่วยอะไร)';
+    errEl.style.display = 'block';
+    document.getElementById('card4').classList.add('required-empty');
+    document.getElementById('card4').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  errEl.style.display = 'none';
+
+  // Loading state
+  const btn = document.getElementById('btnSubmit');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btnText');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnText.textContent = 'กำลังส่ง...';
+
+  const payload = {
+    department: dept,
+    q1: q1,
+    q2: document.getElementById('q2').value.trim(),
+    q3: document.getElementById('q3').value.trim(),
+    q4: q4,
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    if(SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE'){
+      // Demo mode — simulate success
+      await new Promise(r => setTimeout(r, 1200));
+    } else {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+    }
+    showSuccess();
+  } catch(err) {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    btnText.textContent = 'ส่งคำตอบ →';
+    errEl.textContent = '⚠️ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง';
+    errEl.style.display = 'block';
+  }
+});
+
+function showSuccess(){
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('progressFill').style.width = '100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resetForm(){
+  document.getElementById('surveyForm').reset();
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('successScreen').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'flex';
+  updateProgress();
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('required-empty'));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Remove red border on input
+['dept','q1','q2','q3','q4'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => {
+    const card = el.closest('.q-card');
+    if(card) card.classList.remove('required-empty');
+    document.getElementById('errMsg').style.display = 'none';
+  });
+  el.addEventListener('change', () => {
+    const card = el.closest('.q-card');
+    if(card) card.classList.remove('required-empty');
+    document.getElementById('errMsg').style.display = 'none';
+  });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
