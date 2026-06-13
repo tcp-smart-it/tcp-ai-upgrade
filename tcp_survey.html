@@ -247,6 +247,91 @@ textarea::placeholder{ color:#bbb; }
 }
 .btn-secondary:hover{ border-color:var(--ink); }
 
+/* EXAMPLE TOGGLE */
+.example-toggle{
+  display:inline-flex; align-items:center; gap:6px;
+  margin-top:10px;
+  background:none; border:1.5px solid #F4C430;
+  border-radius:20px; padding:5px 14px;
+  font-size:12px; font-family:'Noto Sans Thai',sans-serif;
+  color:#7A5A00; cursor:pointer;
+  transition:all .15s;
+}
+.example-toggle:hover{ background:#FFFBEA; border-color:#D4A017; }
+.example-toggle .arrow{ transition:transform .2s; display:inline-block; }
+.example-toggle.open .arrow{ transform:rotate(90deg); }
+
+.example-box{
+  display:none; margin-top:10px;
+  background:#FFFDF0; border:1.5px solid #F4C430;
+  border-radius:10px; padding:14px 16px;
+}
+.example-box-label{
+  font-size:11px; font-family:'DM Mono',monospace;
+  color:#A07800; letter-spacing:.5px; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.example-box-text{
+  font-size:13px; color:var(--ink2); line-height:1.7;
+  font-style:italic; border-left:3px solid #F4C430;
+  padding-left:12px; margin-bottom:8px;
+}
+.example-box-note{
+  font-size:11px; color:#7A5A00; background:#FFF5C0;
+  border-radius:6px; padding:6px 10px; line-height:1.55;
+}
+
+/* HELP CARD */
+.help-card{
+  background:linear-gradient(135deg,#EAF4FB 0%,#F0FAF3 100%);
+  border:2px solid #90C4E0; border-radius:16px;
+  padding:20px 24px; margin-bottom:16px;
+  display:flex; gap:16px; align-items:center;
+  box-shadow:0 2px 12px rgba(0,120,180,.08);
+}
+.help-icon-wrap{
+  width:48px; height:48px; border-radius:50%;
+  background:linear-gradient(135deg,#1A8EC4,#2EC4B6);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+  box-shadow:0 4px 12px rgba(26,142,196,.3);
+}
+.help-body{ flex:1; }
+.help-title{
+  font-family:'Syne',sans-serif; font-weight:900;
+  font-size:14px; color:#0A4F72; margin-bottom:4px;
+}
+.help-sub{
+  font-size:12px; color:#1A6A8A; line-height:1.6;
+  margin-bottom:10px;
+}
+.help-contact{
+  display:flex; flex-direction:column; gap:6px; margin-top:4px;
+}
+.help-phone{
+  display:inline-flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg,#1A8EC4,#17A2B8);
+  color:#fff; border-radius:10px; padding:10px 18px;
+  text-decoration:none;
+  box-shadow:0 4px 12px rgba(26,142,196,.35);
+  transition:all .2s;
+}
+.help-phone:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(26,142,196,.45); }
+.help-phone-num{
+  font-family:'DM Mono',monospace; font-weight:500;
+  font-size:17px; letter-spacing:1.5px; line-height:1.2;
+}
+.help-phone-ext{
+  font-family:'DM Mono',monospace; font-size:12px;
+  opacity:.85; letter-spacing:.5px;
+}
+.help-desk{
+  display:inline-flex; align-items:center; gap:10px;
+  background:rgba(26,142,196,.1); border:1.5px solid #90C4E0;
+  color:#0A4F72; border-radius:10px; padding:8px 18px;
+  font-family:'DM Mono',monospace; font-size:14px; letter-spacing:1px;
+}
+
 /* FOOTER */
 .site-footer{
   text-align:center; padding:24px;
@@ -277,7 +362,8 @@ textarea::placeholder{ color:#bbb; }
 <div class="hero">
   <div class="pre-label">PRE-CAMPAIGN SURVEY · แบบสำรวจก่อนเริ่มกิจกรรม</div>
   <h1>บอกเราว่างานไหน<br><span>ใช้เวลาของคุณมากที่สุด</span></h1>
-  <p>ทีม IT จะนำข้อมูลนี้ไปออกแบบกิจกรรม AI ที่ตอบโจทย์งานจริงของแต่ละแผนก ใช้เวลาเพียง 5–10 นาที</p>
+  <p>ทีม IT จะนำข้อมูลนี้ไปออกแบบกิจกรรม AI ที่ตอบโจทย์งานจริงของแต่ละแผนก<br>
+  <strong style="color:var(--accent);font-size:15px;">⏱️ ใช้เวลาเพียง 5–10 นาที</strong></p>
   <div class="hero-tags">
     <div class="htag">⏱️ 5–10 นาที</div>
     <div class="htag">🔒 ไม่ระบุชื่อ</div>
@@ -338,13 +424,25 @@ textarea::placeholder{ color:#bbb; }
     <div class="q-card" id="card1">
       <div class="q-num">คำถามที่ 02 / 05</div>
       <div class="q-label">มีงานไหนในแต่ละสัปดาห์ที่รู้สึกว่ากินเวลาเกินไป และติดปัญหาเรื่องอะไรที่ทำให้ช้า<span class="req">*</span></div>
-      <div class="q-hint">💬 ไม่มีคำตอบที่ผิด ไม่มีใครรู้ว่าคุณตอบอะไร — เล่าตามจริงได้เลย<br>เช่น "สรุปรายงานยอดขายทุกอาทิตย์ ติดตรงที่ต้องเปิดหลายไฟล์แล้ว copy ทีละอัน กินเวลา 2–3 ชั่วโมง"</div>
+      <div class="q-hint">💬 ไม่มีคำตอบที่ผิด ไม่มีใครรู้ว่าคุณตอบอะไร — เล่าตามจริงได้เลย · <strong>ตอบได้หลายข้อ พิมพ์ต่อกันได้เลย</strong><br>เช่น "สรุปรายงานยอดขายทุกอาทิตย์ ติดตรงที่ต้องเปิดหลายไฟล์แล้ว copy ทีละอัน กินเวลา 2–3 ชั่วโมง"</div>
       <div class="examples">
         <div class="ex-chip" onclick="appendExample('q1',this)">สรุปรายงานประจำสัปดาห์</div>
         <div class="ex-chip" onclick="appendExample('q1',this)">กรอกข้อมูลใน Excel</div>
         <div class="ex-chip" onclick="appendExample('q1',this)">เขียนอีเมลติดตามงาน</div>
         <div class="ex-chip" onclick="appendExample('q1',this)">จัดทำเอกสารนำเสนอ</div>
         <div class="ex-chip" onclick="appendExample('q1',this)">ตรวจสอบใบเสนอราคา</div>
+        <div class="ex-chip" onclick="appendExample('q1',this)">Copy-paste ข้อมูลระหว่างไฟล์</div>
+        <div class="ex-chip" onclick="appendExample('q1',this)">กรอกข้อมูลซ้ำในหลายที่</div>
+      </div>
+      <button type="button" class="example-toggle" id="toggle1" onclick="toggleExample('ex1','toggle1')">
+        💡 ดูตัวอย่างคำตอบ <span class="arrow">▸</span>
+      </button>
+      <div class="example-box" id="ex1">
+        <div class="example-box-label">📌 ตัวอย่างเท่านั้น — อ่านดูแนวทางได้เลย ไม่ต้องลอกนะครับ</div>
+        <div class="example-box-text">
+          "ทุกสิ้นเดือนต้องสรุปรายงานให้ผู้บริหาร ต้องเก็บข้อมูลจากหลายแหล่งมารวมกันเอง ใช้เวลาเกือบครึ่งวัน ทั้งที่ข้อมูลมีอยู่แล้ว แค่ยังต้องเปิดทีละไฟล์แล้วพิมพ์ใหม่เอง"
+        </div>
+        <div class="example-box-note">✍️ คำตอบของคุณจะมีคุณค่ากว่านี้มากครับ — เขียนตามจริงของงานคุณเองได้เลย</div>
       </div>
       <textarea id="q1" placeholder="งานคืออะไร และติดปัญหาเรื่องอะไร..." maxlength="500" oninput="updateProgress();countChars('q1','cc1')"></textarea>
       <div class="char-count" id="cc1">0 / 500</div>
@@ -354,13 +452,25 @@ textarea::placeholder{ color:#bbb; }
     <div class="q-card" id="card2">
       <div class="q-num">คำถามที่ 03 / 05</div>
       <div class="q-label">เอกสารหรือรายงานไหนที่ทำแล้วรู้สึกว่า "ทำไมมันยากขนาดนี้" ทุกครั้ง และยากเพราะอะไร</div>
-      <div class="q-hint">💬 ข้ามได้ถ้าไม่มี — ไม่มีใครรู้ว่าคุณตอบหรือไม่ตอบ<br>เช่น "สรุปการประชุม ยากเพราะต้องพิมพ์ใหม่ทั้งหมดเอง ไม่มี template"</div>
+      <div class="q-hint">💬 ข้ามได้ถ้าไม่มี — ไม่มีใครรู้ว่าคุณตอบหรือไม่ตอบ · <strong>ตอบได้หลายข้อ พิมพ์ต่อกันได้เลย</strong><br>เช่น "สรุปการประชุม ยากเพราะต้องพิมพ์ใหม่ทั้งหมดเอง ไม่มี template"</div>
       <div class="examples">
         <div class="ex-chip" onclick="appendExample('q2',this)">สรุปการประชุม (MOM)</div>
         <div class="ex-chip" onclick="appendExample('q2',this)">Presentation ลูกค้า</div>
         <div class="ex-chip" onclick="appendExample('q2',this)">รายงานสินค้าคงคลัง</div>
         <div class="ex-chip" onclick="appendExample('q2',this)">เอกสารนำเข้า/ส่งออก</div>
         <div class="ex-chip" onclick="appendExample('q2',this)">รายงาน KPI ประจำเดือน</div>
+        <div class="ex-chip" onclick="appendExample('q2',this)">แบบฟอร์มที่ต้องพิมพ์ใหม่ทุกครั้ง</div>
+        <div class="ex-chip" onclick="appendExample('q2',this)">เอกสารที่ไม่มี template</div>
+      </div>
+      <button type="button" class="example-toggle" id="toggle2" onclick="toggleExample('ex2','toggle2')">
+        💡 ดูตัวอย่างคำตอบ <span class="arrow">▸</span>
+      </button>
+      <div class="example-box" id="ex2">
+        <div class="example-box-label">📌 ตัวอย่างเท่านั้น — อ่านดูแนวทางได้เลย ไม่ต้องลอกนะครับ</div>
+        <div class="example-box-text">
+          "ทำ Presentation สรุปผลงานประจำเดือน ยากเพราะต้องเริ่มออกแบบใหม่ทุกครั้ง ไม่มี template ที่ใช้ซ้ำได้ บางทีทำเนื้อหาเหมือนเดิมเกือบทั้งหมด แต่ก็ยังต้องเสียเวลาจัด layout ใหม่อยู่ดี"
+        </div>
+        <div class="example-box-note">✍️ คำตอบของคุณจะมีคุณค่ากว่านี้มากครับ — เขียนตามจริงของงานคุณเองได้เลย</div>
       </div>
       <textarea id="q2" placeholder="เอกสารคืออะไร และยากเพราะอะไร..." maxlength="500" oninput="updateProgress();countChars('q2','cc2')"></textarea>
       <div class="char-count" id="cc2">0 / 500</div>
@@ -370,13 +480,25 @@ textarea::placeholder{ color:#bbb; }
     <div class="q-card" id="card3">
       <div class="q-num">คำถามที่ 04 / 05</div>
       <div class="q-label">ถ้ามีรีโมทกด ⏩ Fast-Forward งานได้ คุณอยากกด Fast-Forward งานอะไร และงานนั้นติดขัดเรื่องอะไรอยู่</div>
-      <div class="q-hint">💬 ข้ามได้ถ้าไม่มี — ตอบตามความรู้สึกจริงๆ ไม่ต้องกลัวผิด<br>เช่น "แปลเอกสาร Spec สินค้าภาษาอังกฤษ ติดเพราะภาษาเทคนิคเฉพาะทาง แปลผิดไม่ได้"</div>
+      <div class="q-hint">💬 ข้ามได้ถ้าไม่มี — ตอบตามความรู้สึกจริงๆ ไม่ต้องกลัวผิด · <strong>ตอบได้หลายข้อ พิมพ์ต่อกันได้เลย</strong><br>เช่น "แปลเอกสาร Spec สินค้าภาษาอังกฤษ ติดเพราะภาษาเทคนิคเฉพาะทาง แปลผิดไม่ได้"</div>
       <div class="examples">
         <div class="ex-chip" onclick="appendExample('q3',this)">แปลเอกสารต่างประเทศ</div>
         <div class="ex-chip" onclick="appendExample('q3',this)">ค้นหาข้อมูลเปรียบเทียบ</div>
         <div class="ex-chip" onclick="appendExample('q3',this)">นับสต็อกสินค้า</div>
         <div class="ex-chip" onclick="appendExample('q3',this)">สรุปข้อมูลจากหลายไฟล์</div>
         <div class="ex-chip" onclick="appendExample('q3',this)">ตรวจเอกสารหาข้อผิดพลาด</div>
+        <div class="ex-chip" onclick="appendExample('q3',this)">ตรวจสอบข้อมูลทีละรายการ</div>
+        <div class="ex-chip" onclick="appendExample('q3',this)">รวบรวมข้อมูลจากหลายแผนก</div>
+      </div>
+      <button type="button" class="example-toggle" id="toggle3" onclick="toggleExample('ex3','toggle3')">
+        💡 ดูตัวอย่างคำตอบ <span class="arrow">▸</span>
+      </button>
+      <div class="example-box" id="ex3">
+        <div class="example-box-label">📌 ตัวอย่างเท่านั้น — อ่านดูแนวทางได้เลย ไม่ต้องลอกนะครับ</div>
+        <div class="example-box-text">
+          "รวบรวมข้อมูลจากหลายแผนกเพื่อเปรียบเทียบ ต้องส่งอีเมลถามทีละคน รอตอบ แล้วค่อยเอามาจดรวมกันเอง ทั้งที่ข้อมูลมีอยู่แล้ว แค่ยังไม่มีที่เดียวที่รวบไว้ให้"
+        </div>
+        <div class="example-box-note">✍️ คำตอบของคุณจะมีคุณค่ากว่านี้มากครับ — เขียนตามจริงของงานคุณเองได้เลย</div>
       </div>
       <textarea id="q3" placeholder="งานคืออะไร และติดขัดเรื่องอะไร..." maxlength="500" oninput="updateProgress();countChars('q3','cc3')"></textarea>
       <div class="char-count" id="cc3">0 / 500</div>
@@ -386,16 +508,50 @@ textarea::placeholder{ color:#bbb; }
     <div class="q-card" id="card4">
       <div class="q-num">คำถามที่ 05 / 05</div>
       <div class="q-label">ถ้าวันนึงตื่นมาแล้วงาน 1 อย่างเสร็จเองไปแล้ว — อยากให้เป็นงานอะไร แล้วที่ทำเองอยู่ ติดตรงไหนเหรอ<span class="req">*</span></div>
-      <div class="q-hint">💬 ไม่ต้องคิดว่าเป็นไปได้หรือเปล่า — บอกตามความต้องการที่แท้จริง ไม่มีใครรู้ว่าคุณตอบอะไร<br>เช่น "อยากได้ผู้ช่วยเขียนอีเมลภาษาอังกฤษ เพราะเขียนเองใช้เวลานาน กลัวผิดไวยากรณ์"</div>
+      <div class="q-hint">💬 ไม่ต้องคิดว่าเป็นไปได้หรือเปล่า — บอกตามความต้องการที่แท้จริง ไม่มีใครรู้ว่าคุณตอบอะไร · <strong>ตอบได้หลายข้อ พิมพ์ต่อกันได้เลย</strong><br>เช่น "อยากได้ผู้ช่วยเขียนอีเมลภาษาอังกฤษ เพราะเขียนเองใช้เวลานาน กลัวผิดไวยากรณ์"</div>
       <div class="examples">
         <div class="ex-chip" onclick="appendExample('q4',this)">เขียนอีเมลให้</div>
         <div class="ex-chip" onclick="appendExample('q4',this)">สรุปเอกสารยาวๆ</div>
         <div class="ex-chip" onclick="appendExample('q4',this)">แปลภาษาให้</div>
         <div class="ex-chip" onclick="appendExample('q4',this)">วิเคราะห์ตัวเลข</div>
         <div class="ex-chip" onclick="appendExample('q4',this)">คิดไอเดียใหม่ๆ</div>
+        <div class="ex-chip" onclick="appendExample('q4',this)">จัดระเบียบข้อมูลให้อัตโนมัติ</div>
+        <div class="ex-chip" onclick="appendExample('q4',this)">ช่วยตรวจสอบความถูกต้อง</div>
+      </div>
+      <button type="button" class="example-toggle" id="toggle4" onclick="toggleExample('ex4','toggle4')">
+        💡 ดูตัวอย่างคำตอบ <span class="arrow">▸</span>
+      </button>
+      <div class="example-box" id="ex4">
+        <div class="example-box-label">📌 ตัวอย่างเท่านั้น — อ่านดูแนวทางได้เลย ไม่ต้องลอกนะครับ</div>
+        <div class="example-box-text">
+          "อยากได้คนช่วยร่างอีเมลหรือข้อความตอบลูกค้า/คู่ค้า เพราะทุกครั้งต้องนึกว่าจะเขียนยังไงให้ดูเป็นมืออาชีพ ใช้เวลาไปเยอะ ทั้งที่เนื้อหาคล้ายกันแทบทุกครั้ง"
+        </div>
+        <div class="example-box-note">✍️ คำตอบของคุณจะมีคุณค่ากว่านี้มากครับ — เขียนตามจริงของงานคุณเองได้เลย</div>
       </div>
       <textarea id="q4" placeholder="งานคืออะไร และอยากได้ผู้ช่วยเพราะอะไร..." maxlength="500" oninput="updateProgress();countChars('q4','cc4')"></textarea>
       <div class="char-count" id="cc4">0 / 500</div>
+    </div>
+
+    <!-- HELP CARD -->
+    <div class="help-card">
+      <div class="help-icon-wrap">💬</div>
+      <div class="help-body">
+        <div class="help-title">อธิบายไม่ถูก หรือไม่แน่ใจจะตอบยังไง?</div>
+        <div class="help-sub">ไม่เป็นไรเลยครับ — ติดต่อ <strong>บอล</strong> ทีม IT ได้เลย พร้อมรับฟังและช่วยกรอกข้อมูลให้</div>
+        <div class="help-contact">
+          <a href="tel:0618705432" class="help-phone">
+            <span>📞</span>
+            <div>
+              <div class="help-phone-num">061-870-5432</div>
+              <div class="help-phone-ext">มือถือ — โทรได้เลยครับ</div>
+            </div>
+          </a>
+          <div class="help-desk">
+            <span>☎️</span>
+            <span>เบอร์โต๊ะ &nbsp;<strong>ต่อ 368</strong></span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- SUBMIT -->
@@ -422,7 +578,7 @@ textarea::placeholder{ color:#bbb; }
     คำตอบของคุณถูกบันทึกเรียบร้อยแล้ว<br>
     <strong>และเป็นความลับ — ไม่มีใครรู้ว่าคุณตอบอะไร</strong><br><br>
     ทีม IT จะนำ Insight จากทุกแผนกมาออกแบบกิจกรรม<br>
-    ที่แก้ปัญหางานจริงๆ ของคุณ ไม่ใช่กิจกรรมที่เดาเอา<br><br>
+    เพื่อให้ทุกกิจกรรมมีประโยชน์กับงานของคุณจริงๆ<br><br>
     <strong>คาดว่ากิจกรรมจะเริ่มต้น สิงหาคม 2569 นี้ 🚀</strong>
   </div>
   <button class="btn-secondary" onclick="resetForm()">ส่งคำตอบอีกครั้ง</button>
@@ -565,9 +721,35 @@ function resetForm(){
   document.getElementById('formSection').style.display = 'block';
   document.getElementById('successScreen').style.display = 'none';
   document.querySelector('.progress-wrap').style.display = 'flex';
+  // Reset button state
+  document.getElementById('btnSubmit').disabled = false;
+  document.getElementById('spinner').style.display = 'none';
+  document.getElementById('btnText').textContent = 'ส่งคำตอบ →';
+  document.getElementById('errMsg').style.display = 'none';
+  // Close all example boxes
+  ['ex1','ex2','ex3','ex4'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  ['toggle1','toggle2','toggle3','toggle4'].forEach(id => {
+    const btn = document.getElementById(id);
+    btn.classList.remove('open');
+    btn.querySelector('.arrow').textContent = '▸';
+  });
   updateProgress();
   document.querySelectorAll('.q-card').forEach(c => c.classList.remove('required-empty'));
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// EXAMPLE TOGGLE
+// ══════════════════════════════════════
+function toggleExample(boxId, btnId){
+  const box = document.getElementById(boxId);
+  const btn = document.getElementById(btnId);
+  const isOpen = box.style.display === 'block';
+  box.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+  btn.querySelector('.arrow').textContent = isOpen ? '▸' : '▾';
 }
 
 // Remove red border on input
